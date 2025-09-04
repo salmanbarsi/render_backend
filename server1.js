@@ -70,9 +70,9 @@ app.delete("/delete/:dfilename", async (req, res) => {
   try {
     await db.query(`DELETE FROM uploads WHERE filename = $1`, [dfilename]);
 
-    // if (fs.existsSync(dfilepath)) {
-    //   fs.unlinkSync(dfilepath);
-    // }
+    if (fs.existsSync(dfilepath)) {
+      fs.unlinkSync(dfilepath);
+    }
 
     res.json({ success: true });
   } catch (err) {
@@ -90,11 +90,11 @@ app.put("/update/:oldName/:newName/:description", async (req, res) => {
   const newPath = path.join(uploadPath, finalName);
 
   try {
-    // if (!fs.existsSync(oldPath)) {
-    //   return res.status(404).json({ error: "File not found on disk" });
-    // }
+    if (!fs.existsSync(oldPath)) {
+      return res.status(404).json({ error: "File not found on disk" });
+    }
 
-    // fs.renameSync(oldPath, newPath);
+    fs.renameSync(oldPath, newPath);
 
     await db.query(
       `UPDATE uploads SET filename=$1, filepath=$2, description=$3 WHERE filename=$4`,
